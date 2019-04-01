@@ -23,7 +23,7 @@ public class UDPClient implements Runnable {
 	private boolean getOtherClient = false;
 	private boolean gotOtherClient = false;
 	private long sendTimer = System.currentTimeMillis();
-
+	private boolean registered = false;
 	private boolean canSend() {
 		return System.currentTimeMillis() - sendTimer > 500;
 	}
@@ -32,6 +32,7 @@ public class UDPClient implements Runnable {
 		this.serverPort = serverPort;
 		try {
 			dSocket = new DatagramSocket(clientPort);
+			dSocket.setSoTimeout(2000);
 		} catch (Exception e) {
 
 		}
@@ -40,14 +41,18 @@ public class UDPClient implements Runnable {
 	@Override
 	public void run() {
 		long timer = System.currentTimeMillis();
-		register();
+
 		while (running) {
+			if (!registered) {
+				registered = true;
+				register();
+			}
 			DatagramPacket packet = receive();
 			handle(packet);
 			if (System.currentTimeMillis() - timer > 7000 && !gotOtherClient) {
 				getOtherClient = true;
 			}
-			if (getOtherClient && !gotOtherClient) {
+			if (getOtherClient && !gotOtherClient && registered) {
 				requestOtherClient(packet);
 				getOtherClient = false;
 			}
@@ -65,8 +70,7 @@ public class UDPClient implements Runnable {
 		LOG.info("Client received message {} from {}:{}", msg, packet.getAddress(), packet.getPort());
 
 		try (Scanner sc = new Scanner(msg).useDelimiter("~~");) {
-			if (sc.next().equals("UHP")) {
-
+			if (sc.hasNext() && sc.next().equals("UHP")) {
 				switch (sc.next()) {
 					case "1" :
 						respond(packet, "UHP~~1~~");
@@ -127,6 +131,7 @@ public class UDPClient implements Runnable {
 		try {
 			dSocket.receive(packet);
 		} catch (IOException | NullPointerException e) {
+			registered = false;
 			LOG.error("Error: ", e);
 		}
 		return packet;
@@ -141,6 +146,7 @@ public class UDPClient implements Runnable {
 		try {
 			dSocket.send(packet);
 		} catch (IOException e) {
+			registered = false;
 			LOG.error("Error: {}", e);
 		}
 	}
