@@ -6,5 +6,8 @@ public class MainClassServer
     {
         UDPServer server = new UDPServer();
         new Thread(server).start();
+
+        Receiver receiver = new Receiver();
+        new Thread(receiver).start();
     }
 }
