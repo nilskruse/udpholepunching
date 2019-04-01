@@ -1,0 +1,10 @@
+
+
+UHP~~CMD~~ARG1~~ARG2~~ARG3
+
+CMD =	0	Register
+		1	KeepAlive
+		2	GetClients
+		3	GetClient
+		4	
+		5
