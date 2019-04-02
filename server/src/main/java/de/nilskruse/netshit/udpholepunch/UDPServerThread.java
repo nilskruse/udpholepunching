@@ -2,8 +2,6 @@ package de.nilskruse.netshit.udpholepunch;
 
 import java.net.DatagramPacket;
 import java.net.InetAddress;
-import java.util.ArrayDeque;
-import java.util.Deque;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,8 +9,6 @@ import org.slf4j.LoggerFactory;
 public class UDPServerThread extends Thread {
 
 	private static final Logger LOG = LoggerFactory.getLogger(UDPServerThread.class);
-
-	private Deque<String> cmdQueue = new ArrayDeque<>();
 
 	private InetAddress clientAddress;
 	private int clientPort;
