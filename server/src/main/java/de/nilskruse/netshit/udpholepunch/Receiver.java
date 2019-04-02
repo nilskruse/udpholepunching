@@ -15,10 +15,13 @@ public class Receiver implements Runnable {
 	@Override
 	public void run() {
 		LOG.info("Server receiver loop started");
+		long timer = System.currentTimeMillis();
 		DatagramSocket socket = Sender.getInstance().getSocket();
 		while (running) {
 			DatagramPacket packet = new DatagramPacket(new byte[1000], 1000);
-
+			if (System.currentTimeMillis() - timer > 30000) {
+				running = false;
+			}
 			try {
 				socket.receive(packet);
 				new Handler(packet).start();

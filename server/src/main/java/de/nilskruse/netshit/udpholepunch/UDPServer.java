@@ -22,7 +22,6 @@ public class UDPServer implements Runnable {
 
 	public void run() {
 		LOG.info("Server main registry loop started");
-
 		try (DatagramSocket socket = new DatagramSocket(5123)) {
 			while (running) {
 				DatagramPacket packet = new DatagramPacket(new byte[1000], 1000);
@@ -32,7 +31,6 @@ public class UDPServer implements Runnable {
 				LOG.info("Received Message: {}", msg);
 
 				accept(packet, msg);
-
 			}
 		} catch (Exception e) {
 			LOG.error("Error: ", e);
