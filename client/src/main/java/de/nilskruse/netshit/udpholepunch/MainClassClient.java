@@ -7,7 +7,7 @@ public class MainClassClient {
 	public static void main(String[] args) {
 		InetAddress ia = null;
 		try {
-			ia = InetAddress.getByName("192.168.0.171");
+			ia = InetAddress.getByName("localhost");
 			UDPClient client = new UDPClient(ia, 5123);
 			new Thread(client).start();
 		} catch (UnknownHostException e) {

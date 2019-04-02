@@ -11,10 +11,10 @@ import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class UDPClient implements Runnable {
+public class UDPClient extends Thread {
 
 	private static final Logger LOG = LoggerFactory.getLogger(UDPClient.class);
-
+	private int counter = 0;
 	private boolean running = true;
 	private int clientPort = new Random().nextInt(60000);
 	private InetAddress serverAddress;
@@ -47,7 +47,8 @@ public class UDPClient implements Runnable {
 				registered = true;
 				register();
 			}
-			DatagramPacket packet = receive();
+			DatagramPacket packet = null;
+			packet = receive();
 			handle(packet);
 			if (System.currentTimeMillis() - timer > 7000 && !gotOtherClient) {
 				getOtherClient = true;
@@ -71,6 +72,7 @@ public class UDPClient implements Runnable {
 
 		try (Scanner sc = new Scanner(msg).useDelimiter("~~");) {
 			if (sc.hasNext() && sc.next().equals("UHP")) {
+
 				switch (sc.next()) {
 					case "1" :
 						respond(packet, "UHP~~1~~");
@@ -85,7 +87,10 @@ public class UDPClient implements Runnable {
 						break;
 					case "10" :
 						LOG.info("Received Message from other client {}:{}", packet.getAddress(), packet.getPort());
-						respond(packet, "UHP~~10~~");
+						respond(packet, "UHP~~10~~" + counter++);
+						break;
+					default :
+						LOG.info("nothing");
 						break;
 
 				}
@@ -94,6 +99,7 @@ public class UDPClient implements Runnable {
 		} catch (Exception e) {
 			LOG.error("Error: ", e);
 		}
+
 	}
 	private void sendToClient(String msg, InetAddress address, int port) {
 		byte[] responseBuffer = msg.getBytes();

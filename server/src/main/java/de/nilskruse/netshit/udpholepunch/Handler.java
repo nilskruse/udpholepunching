@@ -64,8 +64,8 @@ public class Handler extends Thread {
 			String msg2String = "UHP~~6~~" + client2.getClientAddress().toString().substring(1) + "~~" + client2.getClientPort() + "~~";
 			byte[] msg1 = msg1String.getBytes();
 			byte[] msg2 = msg2String.getBytes();
-			DatagramPacket sPacket1 = new DatagramPacket(msg1, msg1.length, client1.getClientAddress(), client1.getClientPort());
-			DatagramPacket sPacket2 = new DatagramPacket(msg2, msg2.length, client2.getClientAddress(), client2.getClientPort());
+			DatagramPacket sPacket1 = new DatagramPacket(msg1, msg1.length, client2.getClientAddress(), client2.getClientPort());
+			DatagramPacket sPacket2 = new DatagramPacket(msg2, msg2.length, client1.getClientAddress(), client1.getClientPort());
 			Sender.getInstance().sendPacket(sPacket1);
 			Sender.getInstance().sendPacket(sPacket2);
 
