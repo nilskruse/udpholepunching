@@ -138,7 +138,6 @@ public class UDPClient extends Thread {
 				serverAddress = InetAddress.getByName("localhost");
 				serverPort = 5123;
 				gotOtherClient = false;
-				// sendToClient("UHP~~1~~", serverAddress, serverPort);
 			} catch (UnknownHostException e1) {
 				LOG.error("Error: ", e);
 			}
