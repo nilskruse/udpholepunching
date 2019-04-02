@@ -7,5 +7,6 @@ public class MainClassServer {
 
 		Receiver receiver = new Receiver();
 		new Thread(receiver).start();
+
 	}
 }
