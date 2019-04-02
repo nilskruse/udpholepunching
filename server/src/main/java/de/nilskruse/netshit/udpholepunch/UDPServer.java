@@ -31,7 +31,7 @@ public class UDPServer implements Runnable {
 				String msg = new String(packet.getData()).trim();
 				LOG.info("Received Message: {}", msg);
 
-				accept(socket, packet, msg);
+				accept(packet, msg);
 
 			}
 		} catch (Exception e) {
@@ -39,10 +39,10 @@ public class UDPServer implements Runnable {
 		}
 	}
 
-	private void accept(DatagramSocket socket, DatagramPacket packet, String msg) {
+	private void accept(DatagramPacket packet, String msg) {
 		try (Scanner sc = new Scanner(msg).useDelimiter("~~");) {
 			if (sc.next().equals("UHP") && sc.next().equals("0")) {
-				UDPServerThread tempThread = new UDPServerThread(packet, socket);
+				UDPServerThread tempThread = new UDPServerThread(packet);
 				tempThread.start();
 				sessions.add(tempThread);
 			}

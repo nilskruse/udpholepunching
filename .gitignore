@@ -3,3 +3,5 @@
 *.classpath
 *.prefs
 *.class
+sonar.bat
+sonar

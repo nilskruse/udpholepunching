@@ -3,15 +3,19 @@ package de.nilskruse.netshit.udpholepunch;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 public class MainClassClient {
+	private static final Logger LOG = LoggerFactory.getLogger(MainClassClient.class);
+
 	public static void main(String[] args) {
 		InetAddress ia = null;
 		try {
 			ia = InetAddress.getByName("localhost");
 			UDPClient client = new UDPClient(ia, 5123);
-			new Thread(client).start();
+			client.start();
 		} catch (UnknownHostException e) {
-			e.printStackTrace();
+			LOG.error("Error: ", e);
 		}
 
 	}

@@ -1,7 +1,6 @@
 package de.nilskruse.netshit.udpholepunch;
 
 import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -13,8 +12,6 @@ public class UDPServerThread extends Thread {
 
 	private static final Logger LOG = LoggerFactory.getLogger(UDPServerThread.class);
 
-	private DatagramPacket packet;
-	private DatagramSocket socket;
 	private Deque<String> cmdQueue = new ArrayDeque<>();
 
 	private InetAddress clientAddress;
@@ -22,9 +19,7 @@ public class UDPServerThread extends Thread {
 	private boolean running = true;
 	private long lastAlive;
 
-	public UDPServerThread(DatagramPacket packet, DatagramSocket socket) {
-		this.packet = packet;
-		this.socket = socket;
+	public UDPServerThread(DatagramPacket packet) {
 		this.clientAddress = packet.getAddress();
 		this.clientPort = packet.getPort();
 		LOG.info("New client registered: {}:{}", clientAddress, clientPort);
@@ -48,14 +43,7 @@ public class UDPServerThread extends Thread {
 	public void run() {
 		while (running) {
 
-			if (cmdQueue.isEmpty()) {
-				keepAlive();
-			} else {
-				switch (cmdQueue.poll()) {
-					default :
-						break;
-				}
-			}
+			keepAlive();
 
 			try {
 				Thread.sleep(500);

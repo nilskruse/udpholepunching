@@ -5,7 +5,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Random;
+import java.security.SecureRandom;
 import java.util.Scanner;
 
 import org.slf4j.Logger;
@@ -16,17 +16,14 @@ public class UDPClient extends Thread {
 	private static final Logger LOG = LoggerFactory.getLogger(UDPClient.class);
 	private int counter = 0;
 	private boolean running = true;
-	private int clientPort = new Random().nextInt(60000);
+	private int clientPort = new SecureRandom().nextInt(60000);
 	private InetAddress serverAddress;
 	private int serverPort;
 	private DatagramSocket dSocket;
 	private boolean getOtherClient = false;
 	private boolean gotOtherClient = false;
-	private long sendTimer = System.currentTimeMillis();
 	private boolean registered = false;
-	private boolean canSend() {
-		return System.currentTimeMillis() - sendTimer > 500;
-	}
+
 	public UDPClient(InetAddress serverAddress, int serverPort) {
 		this.serverAddress = serverAddress;
 		this.serverPort = serverPort;
@@ -34,7 +31,7 @@ public class UDPClient extends Thread {
 			dSocket = new DatagramSocket(clientPort);
 			dSocket.setSoTimeout(2000);
 		} catch (Exception e) {
-
+			LOG.error("Error opening client socket: ", e);
 		}
 	}
 
@@ -97,7 +94,7 @@ public class UDPClient extends Thread {
 
 			}
 		} catch (Exception e) {
-			LOG.error("Error: ", e);
+			LOG.error("Scan Error: ", e);
 		}
 
 	}
@@ -107,7 +104,7 @@ public class UDPClient extends Thread {
 		try {
 			dSocket.send(responsePacket);
 		} catch (IOException e) {
-			LOG.error("Error: ", e);
+			LOG.error("Send Error: ", e);
 		}
 	}
 	private void setOtherClient(Scanner sc) {
@@ -117,7 +114,7 @@ public class UDPClient extends Thread {
 			gotOtherClient = true;
 			LOG.info("Registered new client {}:{}", serverAddress, serverPort);
 		} catch (UnknownHostException e) {
-			LOG.error("Error: ", e);
+			LOG.error("InetAddress Error: ", e);
 		}
 	}
 
@@ -127,7 +124,7 @@ public class UDPClient extends Thread {
 		try {
 			dSocket.send(responsePacket);
 		} catch (IOException e) {
-			LOG.error("Error: ", e);
+			LOG.error("Response Error: ", e);
 		}
 	}
 
@@ -138,7 +135,7 @@ public class UDPClient extends Thread {
 			dSocket.receive(packet);
 		} catch (IOException | NullPointerException e) {
 			registered = false;
-			LOG.error("Error: ", e);
+			LOG.error("Receive Error: ", e);
 		}
 		return packet;
 	}
