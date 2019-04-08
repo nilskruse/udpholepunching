@@ -12,7 +12,7 @@ public class MainClassClient {
 	public static void main(String[] args) {
 		InetAddress ia = null;
 		try {
-			ia = InetAddress.getByName("localhost");
+			ia = InetAddress.getByName("82.165.115.188");
 			UDPClient client = new UDPClient(ia, 5123);
 			client.start();
 		} catch (UnknownHostException e) {
